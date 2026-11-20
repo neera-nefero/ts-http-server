@@ -1,11 +1,22 @@
 process.loadEnvFile();
-envOrThrow('DB_URL');
+const migrationConfig = {
+    migrationsFolder: "./src/db/migrations",
+};
 export const config = {
-    fileserverHits: 0,
-    dbURL: process.env.DB_URL,
+    db: {
+        url: envOrThrow("DB_URL"),
+        migrationConfig: migrationConfig
+    },
+    api: {
+        fileServerHits: 0,
+        port: Number(envOrThrow("PORT")),
+        platform: envOrThrow("PLATFORM")
+    }
 };
 function envOrThrow(key) {
-    if (!process.env.key) {
+    const value = process.env[key];
+    if (!value) {
         throw new Error(`${key} is not set`);
     }
+    return value;
 }

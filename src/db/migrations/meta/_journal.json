@@ -15,6 +15,13 @@
       "when": 1795249628263,
       "tag": "0001_flippant_gauntlet",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795276867364,
+      "tag": "0002_ambiguous_amazoness",
+      "breakpoints": true
     }
   ]
 }

@@ -1,20 +1,49 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "./errors.js";
-import { respondWithJSON } from "./json.js";
-import { createUser } from "../db/queries/users.js";
-import { NewUser, User } from "../db/schema.js";
+import { BadRequestError, UnauthorizedError } from "./errors.js";
+import { respondWithError, respondWithJSON } from "./json.js";
+import { createUser, getUserByEmail } from "../db/queries/users.js";
+import { NewUser, UserPreview } from "../db/schema.js";
+import { hashPassword, checkPasswordHash } from "./auth.js";
 
 export async function handlerCreateUser(req: Request, res: Response) {
-    type parameters = { email: string };
+    type parameters = { email: string, password: string };
     const params: parameters = req.body;
 
     if (!params.email) {
         throw new BadRequestError("Email required");
     }
+    if (!params.password) {
+        throw new BadRequestError("Password required");
+    }
+
+    const hashedPassword = await hashPassword(params.password);
     const newUser: NewUser = {
         email: params.email,
+        hashedPassword: hashedPassword
     }
-    const insertedUser: User = await createUser(newUser);
+    const insertedUser: UserPreview = await createUser(newUser);
 
     respondWithJSON(res, 201, insertedUser);
+}
+
+export async function handlerLoginUser(req: Request, res: Response) {
+    type parameters = { email: string, password: string };
+    const params: parameters = req.body;
+
+    const user = await getUserByEmail(params.email);
+    if (!user || !user.hashedPassword) {
+        throw new UnauthorizedError("incorrect email or password");
+    }
+
+    const ok = await checkPasswordHash(params.password, user.hashedPassword);
+    if (!ok) {
+        throw new UnauthorizedError("incorrect email or password");
+    }
+
+    respondWithJSON(res, 200, {
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        email: user.email
+    });
 }

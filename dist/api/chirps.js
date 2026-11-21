@@ -1,11 +1,21 @@
 import { config } from "../config.js";
 import { BadRequestError } from "./errors.js";
-import { respondWithJSON } from "./json.js";
-import { getChirps, createChirp } from "../db/queries/chirps.js";
-export async function handlerChirpsRetrieval(req, res) {
+import { respondWithError, respondWithJSON } from "./json.js";
+import { getChirps, getChirp, createChirp } from "../db/queries/chirps.js";
+export async function handlerGetAllChirps(req, res) {
     const chirps = await getChirps();
-    console.log(chirps);
     respondWithJSON(res, 200, chirps);
+}
+export async function handlerGetChirp(req, res) {
+    const chirpId = req.params.chirpId;
+    if (typeof chirpId !== "string") {
+        throw new BadRequestError("Invalid chirp ID");
+    }
+    const chirp = await getChirp(chirpId);
+    if (!chirp) {
+        respondWithError(res, 404, "Chirp not found");
+    }
+    respondWithJSON(res, 200, chirp);
 }
 export async function handlerChirpsCreation(req, res) {
     const params = req.body;

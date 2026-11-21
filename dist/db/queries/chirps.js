@@ -1,10 +1,18 @@
 import { db } from "../index.js";
 import { chirps } from "../schema.js";
+import { eq } from "drizzle-orm";
 export async function getChirps() {
     const result = await db
         .select()
         .from(chirps)
         .orderBy(chirps.createdAt);
+    return result;
+}
+export async function getChirp(id) {
+    const [result] = await db
+        .select()
+        .from(chirps)
+        .where(eq(chirps.id, id));
     return result;
 }
 export async function createChirp(chirp) {

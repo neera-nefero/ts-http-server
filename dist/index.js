@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerReset } from "./api/reset.js";
-import { handlerChirpsRetrieval, handlerChirpsCreation } from "./api/chirps.js";
+import { handlerGetChirp, handlerGetAllChirps, handlerChirpsCreation } from "./api/chirps.js";
 import { middlewareLogResponses, middlewareMetricsInc, errorMiddlewareHandler } from "./api/middleware.js";
 import { handlerCreateUser } from "./api/users.js";
 import { config } from "./config.js";
@@ -24,7 +24,8 @@ app.post("/admin/reset", handlerReset);
 // Users
 app.post("/api/users", handlerCreateUser);
 // Chirps
-app.get("/api/chirps", handlerChirpsRetrieval);
+app.get("/api/chirps", handlerGetAllChirps);
+app.get("/api/chirps/:chirpId", handlerGetChirp);
 app.post("/api/chirps", handlerChirpsCreation);
 app.use(errorMiddlewareHandler);
 app.listen(PORT, () => {

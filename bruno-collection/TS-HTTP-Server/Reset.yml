@@ -1,5 +1,5 @@
 info:
-  name: Reset
+  name: /admin/reset
   type: http
   seq: 1
 

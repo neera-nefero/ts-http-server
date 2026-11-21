@@ -2,8 +2,14 @@ import type { Request, Response } from "express";
 import { config } from "../config.js";
 import { BadRequestError } from "./errors.js";
 import { respondWithJSON } from "./json.js";
-import { createChirp } from "../db/queries/chirps.js";
+import { getChirps, createChirp } from "../db/queries/chirps.js";
 import { Chirp } from "../db/schema.js";
+
+export async function handlerChirpsRetrieval(req: Request, res: Response) {
+    const chirps = await getChirps();
+    console.log(chirps);
+    respondWithJSON(res, 200, chirps);
+}
 
 export async function handlerChirpsCreation(req: Request, res: Response) {
     type parameters = { body: string, userId: string };

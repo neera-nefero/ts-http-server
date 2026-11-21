@@ -11,6 +11,10 @@ export const config = {
         fileServerHits: 0,
         port: Number(envOrThrow("PORT")),
         platform: envOrThrow("PLATFORM")
+    },
+    chirp: {
+        maxChirpLength: 140,
+        meanWords: ['kerfuffle', 'sharbert', 'fornax']
     }
 };
 function envOrThrow(key) {

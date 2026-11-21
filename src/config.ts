@@ -11,9 +11,15 @@ type APIConfig = {
     platform: string
 };
 
+type ChirpConfig = {
+    maxChirpLength: number,
+    meanWords: string[]
+}
+
 type Config = {
     db: DBConfig,
-    api: APIConfig
+    api: APIConfig,
+    chirp: ChirpConfig
 }
 
 process.loadEnvFile()
@@ -31,6 +37,10 @@ export const config: Config = {
         fileServerHits: 0,
         port: Number(envOrThrow("PORT")),
         platform: envOrThrow("PLATFORM")
+    },
+    chirp: {
+        maxChirpLength: 140,
+        meanWords: ['kerfuffle', 'sharbert', 'fornax']
     }
 
 };

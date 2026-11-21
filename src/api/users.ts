@@ -5,11 +5,14 @@ import { createUser } from "../db/queries/users.js";
 import { NewUser, User } from "../db/schema.js";
 
 export async function handlerCreateUser(req: Request, res: Response) {
-    if (!req.body.email) {
+    type parameters = { email: string };
+    const params: parameters = req.body;
+
+    if (!params.email) {
         throw new BadRequestError("Email required");
     }
     const newUser: NewUser = {
-        email: req.body.email,
+        email: params.email,
     }
     const insertedUser: User = await createUser(newUser);
 

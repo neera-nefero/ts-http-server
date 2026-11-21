@@ -1,0 +1,22 @@
+info:
+  name: Chirp add
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8080/api/chirps
+  body:
+    type: json
+    data: |-
+      {
+        "body": "Quiero mucho a Miguel!",
+        "userId": "814615a2-26d4-4d25-ba92-c94ea8056dd2"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

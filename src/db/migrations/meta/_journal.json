@@ -8,6 +8,13 @@
       "when": 1795099949763,
       "tag": "0000_wandering_post",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795249628263,
+      "tag": "0001_flippant_gauntlet",
+      "breakpoints": true
     }
   ]
 }

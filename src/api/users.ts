@@ -27,8 +27,10 @@ export async function handlerCreateUser(req: Request, res: Response) {
 }
 
 export async function handlerLoginUser(req: Request, res: Response) {
-    type parameters = { email: string, password: string };
+    type parameters = { email: string, password: string, expiresInSeconds?: number };
     const params: parameters = req.body;
+
+    const expirationDate = getExpirationDate(params.expiresInSeconds);
 
     const user = await getUserByEmail(params.email);
     if (!user || !user.hashedPassword) {
@@ -46,4 +48,13 @@ export async function handlerLoginUser(req: Request, res: Response) {
         updatedAt: user.updatedAt,
         email: user.email
     });
+}
+
+function getExpirationDate(proposedTime?: number) {
+    const oneHourFromNow = Math.floor(Date.now() / 1000) + 3600;
+    if (proposedTime && proposedTime < oneHourFromNow) {
+        return proposedTime;
+    }
+
+    return oneHourFromNow;
 }

@@ -1,6 +1,7 @@
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
+import { Request } from "express";
 import { BadRequestError, UnauthorizedError } from "./errors.js";
 
 type payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
@@ -41,6 +42,14 @@ export function validateJWT(tokenString: string, secret: string) {
     }
 
     return decoded.sub;
+}
+
+export function getBearerToken(req: Request) {
+    const authorization = req.get("Authorization");
+    if (!authorization) {
+        throw new BadRequestError("Malformed authorization header");
+    }
+    return extractBearerToken(authorization);
 }
 
 export function extractBearerToken(authorization: string | undefined) {

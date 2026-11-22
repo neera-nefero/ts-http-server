@@ -19,7 +19,8 @@ type ChirpConfig = {
 type Config = {
     db: DBConfig,
     api: APIConfig,
-    chirp: ChirpConfig
+    chirp: ChirpConfig,
+    token: string
 }
 
 process.loadEnvFile()
@@ -41,8 +42,8 @@ export const config: Config = {
     chirp: {
         maxChirpLength: 140,
         meanWords: ['kerfuffle', 'sharbert', 'fornax']
-    }
-
+    },
+    token: envOrThrow("API_TOKEN")
 };
 
 function envOrThrow(key: string) {

@@ -15,7 +15,8 @@ export const config = {
     chirp: {
         maxChirpLength: 140,
         meanWords: ['kerfuffle', 'sharbert', 'fornax']
-    }
+    },
+    token: envOrThrow("API_TOKEN")
 };
 function envOrThrow(key) {
     const value = process.env[key];

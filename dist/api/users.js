@@ -1,7 +1,8 @@
 import { BadRequestError, UnauthorizedError } from "./errors.js";
 import { respondWithJSON } from "./json.js";
 import { createUser, getUserByEmail } from "../db/queries/users.js";
-import { hashPassword, checkPasswordHash } from "./auth.js";
+import { hashPassword, checkPasswordHash, makeJWT } from "./auth.js";
+import { config } from "../config.js";
 export async function handlerCreateUser(req, res) {
     const params = req.body;
     if (!params.email) {
@@ -20,6 +21,7 @@ export async function handlerCreateUser(req, res) {
 }
 export async function handlerLoginUser(req, res) {
     const params = req.body;
+    const expirationDate = getExpirationDate(params.expiresInSeconds);
     const user = await getUserByEmail(params.email);
     if (!user || !user.hashedPassword) {
         throw new UnauthorizedError("incorrect email or password");
@@ -28,10 +30,19 @@ export async function handlerLoginUser(req, res) {
     if (!ok) {
         throw new UnauthorizedError("incorrect email or password");
     }
+    const token = makeJWT(user.id, expirationDate, config.token);
     respondWithJSON(res, 200, {
         id: user.id,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        email: user.email
+        email: user.email,
+        token: token
     });
+}
+function getExpirationDate(proposedTime) {
+    const oneHourFromNow = Math.floor(Date.now() / 1000) + 3600;
+    if (proposedTime && proposedTime < oneHourFromNow) {
+        return proposedTime;
+    }
+    return oneHourFromNow;
 }

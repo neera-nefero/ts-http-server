@@ -3,7 +3,8 @@ import { BadRequestError, UnauthorizedError } from "./errors.js";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { createUser, getUserByEmail } from "../db/queries/users.js";
 import { NewUser, UserPreview } from "../db/schema.js";
-import { hashPassword, checkPasswordHash } from "./auth.js";
+import { hashPassword, checkPasswordHash, makeJWT } from "./auth.js";
+import { config } from "../config.js";
 
 export async function handlerCreateUser(req: Request, res: Response) {
     type parameters = { email: string, password: string };
@@ -42,11 +43,14 @@ export async function handlerLoginUser(req: Request, res: Response) {
         throw new UnauthorizedError("incorrect email or password");
     }
 
+    const token = makeJWT(user.id, expirationDate, config.token);
+
     respondWithJSON(res, 200, {
         id: user.id,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        email: user.email
+        email: user.email,
+        token: token
     });
 }
 

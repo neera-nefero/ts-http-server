@@ -2,6 +2,7 @@ import { config } from "../config.js";
 import { BadRequestError } from "./errors.js";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { getChirps, getChirp, createChirp } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "./auth.js";
 export async function handlerGetAllChirps(req, res) {
     const chirps = await getChirps();
     respondWithJSON(res, 200, chirps);
@@ -19,11 +20,13 @@ export async function handlerGetChirp(req, res) {
 }
 export async function handlerChirpsCreation(req, res) {
     const params = req.body;
+    const bearerToken = getBearerToken(req);
+    const userId = validateJWT(bearerToken, config.token);
     checkMaxChirpLength(params.body);
     const cleanedBody = cleanChirpBody(params.body);
     const chirp = await createChirp({
-        body: params.body,
-        userId: params.userId
+        body: cleanedBody,
+        userId: userId
     });
     respondWithJSON(res, 201, {
         id: chirp.id,

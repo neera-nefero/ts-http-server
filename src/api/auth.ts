@@ -64,3 +64,12 @@ export function extractBearerToken(authorization: string | undefined) {
 
     return value;
 }
+
+export async function makeRefreshToken() {
+    const {
+        randomBytes,
+    } = await import('node:crypto');
+
+    const token = randomBytes(32).toString('hex');
+    return token;
+}

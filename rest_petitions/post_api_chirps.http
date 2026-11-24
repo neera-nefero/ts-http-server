@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/chirps HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHkiLCJzdWIiOiI4OTk4Nzc3NS0yZmE2LTRiMWUtOTI4Ny0zZjYzMGQ2N2JiZjgiLCJpYXQiOjE3OTU0NDM2MDIsImV4cCI6MzU5MDg5MDgwNH0.jGQi304y-Yw8WX-5SvBM65vUVCeOCVG_jTgYOkq6EGY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHkiLCJzdWIiOiIyMjExZDFiYy0xMDhkLTRjYWQtYWQ3Zi01ODY2ZTRiODhjMDEiLCJpYXQiOjE3OTU1MzMxNjMsImV4cCI6MTc5NTUzNjc2M30.MHnduGeuMRx0v66tHibDa5r0q-ZxWyLWS3KccycrOCs
 
 {
   "body": "Clearly his taste in women is the same as his taste in lawyers: only the very best... with just a right amount of dirty!"

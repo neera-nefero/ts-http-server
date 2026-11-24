@@ -1,0 +1,3 @@
+POST http://localhost:8080/api/revoke HTTP/1.1
+content-type: application/json
+Authorization: Bearer f21e6bf8bb0fbd928e08a7848472b5976c3fae569e4ed311349d28658c12fc34

@@ -7,7 +7,7 @@ import { handlerMetrics } from "./api/metrics.js";
 import { handlerReset } from "./api/reset.js";
 import { handlerGetChirp, handlerGetAllChirps, handlerChirpsCreation } from "./api/chirps.js";
 import { middlewareLogResponses, middlewareMetricsInc, errorMiddlewareHandler } from "./api/middleware.js";
-import { handlerCreateUser, handlerLoginUser } from "./api/users.js";
+import { handlerCreateUser, handlerLoginUser, handlerRefreshToken, handlerRevokeToken } from "./api/users.js";
 import { config } from "./config.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
@@ -27,6 +27,8 @@ app.use("/app", express.static("./src/app"));
 app.get("/api/healthz", handlerReadiness);
 app.get("/admin/metrics", handlerMetrics);
 
+app.post("/api/refresh", handlerRefreshToken);
+app.post("/api/revoke", handlerRevokeToken);
 app.post("/admin/reset", handlerReset);
 
 // Users

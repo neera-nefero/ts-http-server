@@ -1,10 +1,9 @@
 import { BadRequestError, UnauthorizedError } from "./errors.js";
 import { respondWithJSON } from "./json.js";
-import { createUser, getUserByEmail } from "../db/queries/users.js";
-import { hashPassword, checkPasswordHash, makeJWT, makeRefreshToken } from "./auth.js";
+import { createUser, getUserByEmail, updateUser } from "../db/queries/users.js";
+import { hashPassword, checkPasswordHash, makeJWT, makeRefreshToken, validateJWT, getBearerToken } from "./auth.js";
 import { insertRefreshToken, userForRefreshToken, revokeRefreshToken } from "../db/queries/refresh_tokens.js";
 import { config } from "../config.js";
-import { getBearerToken } from "./auth.js";
 export async function handlerCreateUser(req, res) {
     const params = req.body;
     if (!params.email) {
@@ -61,6 +60,25 @@ export async function handlerRevokeToken(req, res) {
     const bearerToken = getBearerToken(req);
     await revokeRefreshToken(bearerToken, new Date(Date.now()));
     res.status(204).end();
+}
+export async function handlerUpdateUser(req, res) {
+    const params = req.body;
+    if (!params.email) {
+        throw new BadRequestError("Email required");
+    }
+    if (!params.password) {
+        throw new BadRequestError("Password required");
+    }
+    const bearerToken = getBearerToken(req);
+    const userId = validateJWT(bearerToken, config.token);
+    const hashedPassword = await hashPassword(params.password);
+    const user = await updateUser(userId, hashedPassword, params.email, new Date(Date.now()));
+    respondWithJSON(res, 200, {
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        email: user.email
+    });
 }
 function createAccessToken(userId) {
     // 1 hour expiration
